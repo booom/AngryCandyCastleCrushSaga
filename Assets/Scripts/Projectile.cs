@@ -6,7 +6,7 @@ public class Projectile : MonoBehaviour
 	private SpringJoint2D spring;
 	private GameObject slingshotObj;
 	private Slingshot slingshot;
-	
+
 	private bool dragging = false;
 
 	private Ray slingshotToAniball;
@@ -14,9 +14,15 @@ public class Projectile : MonoBehaviour
 
 	private Vector3 prevVel;
 
+	void Awake()
+	{
+		rigidbody2D.collider2D.enabled = false;
+	}
+
 	void Start()
 	{
 		spring = GetComponent<SpringJoint2D>();
+		spring.connectedBody = GameObject.Find("CatapultBackLeft").rigidbody2D;
 		slingshotObj = GameObject.Find("slingshot");
 		slingshot = slingshotObj.GetComponent<Slingshot>();
 		slingshotToAniball = new Ray(spring.connectedBody.transform.position, Vector3.zero);
@@ -34,6 +40,7 @@ public class Projectile : MonoBehaviour
 	{
 		dragging = false;
 		rigidbody2D.isKinematic = false;
+		NotificationCenter.DefaultCenter.PostNotification(this, "Launch");
 	}
 
 	void Update()
